@@ -23,14 +23,19 @@ uv sync
 ### Option 2: Using Docker
 
 ```bash
-# Using docker-compose (recommended)
+# Quick start with docker-compose
 docker-compose up -d
 
-# Or using Docker directly
-docker build -t bharatgen-openai-compatible-api .
+# Or build and run manually
+./build.sh
 docker run -p 8000:8000 \
   -e BHARATGEN_API_KEYS=sk-test-key \
   bharatgen-openai-compatible-api
+
+# Using Makefile (recommended)
+make build        # Build the image
+make run          # Run in development mode
+make test         # Test the endpoints
 ```
 
 ## Quick Start

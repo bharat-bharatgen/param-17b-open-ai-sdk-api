@@ -1,0 +1,33 @@
+version: '3.8'
+
+# Simple production deployment without nginx
+# Use this for:
+# - Cloud platforms that provide load balancers (AWS, GCP, DigitalOcean)
+# - Internal deployments
+# - Development/staging environments
+
+services:
+  bharatgen-openai-compatible-api:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - BHARATGEN_HOST=0.0.0.0
+      - BHARATGEN_PORT=8000
+      - BHARATGEN_BASE_URL=${BHARATGEN_BASE_URL}
+      - BHARATGEN_API_KEYS=${BHARATGEN_API_KEYS}
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '1'
+          memory: 512M
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
