@@ -13,9 +13,24 @@ OpenAI-compatible API wrapper for BharatGen, providing both a Python SDK and RES
 
 ## Installation
 
+### Option 1: Using UV (Python)
+
 ```bash
 cd bharatgen-param-17b
 uv sync
+```
+
+### Option 2: Using Docker
+
+```bash
+# Using docker-compose (recommended)
+docker-compose up -d
+
+# Or using Docker directly
+docker build -t bharatgen-openai-compatible-api .
+docker run -p 8000:8000 \
+  -e BHARATGEN_API_KEYS=sk-test-key \
+  bharatgen-openai-compatible-api
 ```
 
 ## Quick Start
@@ -114,13 +129,24 @@ client = OpenAI(
 - `BHARATGEN_HOST` - Server host
   - Default: `0.0.0.0`
 
-**Example:**
+**Example (Python):**
 
 ```bash
 export BHARATGEN_BASE_URL="https://your-gradio-instance.com/gradio_api"
 export BHARATGEN_API_KEYS="sk-prod-key1,sk-prod-key2"
 export BHARATGEN_PORT="8000"
 python -m bharatgen_openai.server
+```
+
+**Example (Docker):**
+
+```bash
+# Copy and customize environment file
+cp .env.example .env
+# Edit .env with your settings
+
+# Start with docker-compose
+docker-compose up -d
 ```
 
 ## Examples
@@ -156,6 +182,15 @@ Check that the Gradio API is accessible. If the URL has changed, update `BHARATG
 
 ```bash
 export BHARATGEN_BASE_URL="https://new-url.gradio.live/gradio_api"
+```
+
+## Deployment
+
+For production deployment instructions, see [DEPLOYMENT.md](DEPLOYMENT.md).
+
+Quick deploy:
+```bash
+./deploy.sh production
 ```
 
 ## Documentation

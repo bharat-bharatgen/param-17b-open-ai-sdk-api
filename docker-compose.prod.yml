@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  bharatgen-openai-compatible-api:
+    build: .
+    restart: unless-stopped
+    environment:
+      - BHARATGEN_HOST=0.0.0.0
+      - BHARATGEN_PORT=8000
+      - BHARATGEN_BASE_URL=${BHARATGEN_BASE_URL}
+      - BHARATGEN_API_KEYS=${BHARATGEN_API_KEYS}
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '1'
+          memory: 1G
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - app-network
+
+  nginx:
+    image: nginx:alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+      - /var/log/nginx:/var/log/nginx
+    depends_on:
+      - bharatgen-openai-compatible-api
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

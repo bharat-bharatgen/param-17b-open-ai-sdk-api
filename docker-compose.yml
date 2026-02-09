@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  bharatgen-openai-compatible-api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - BHARATGEN_HOST=0.0.0.0
+      - BHARATGEN_PORT=8000
+      - BHARATGEN_BASE_URL=${BHARATGEN_BASE_URL:-https://1df79b03590242911b.gradio.live/gradio_api}
+      - BHARATGEN_API_KEYS=${BHARATGEN_API_KEYS:-sk-test-key}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
